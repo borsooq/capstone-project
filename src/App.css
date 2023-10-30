@@ -1,3 +1,36 @@
+body {
+  margin: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.header {
+  display: grid;
+  height: 150px;
+  grid-template-columns: 1fr 4fr;
+  margin-top: 40px;
+}
+
+.mainContainer {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: 2fr 4fr 3fr 3fr;
+}
+
+.navigation {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.navigation-item {
+  display: grid;
+}
+
+a:link {
+  text-decoration: none;
+}
+
 .App {
   text-align: center;
 }
