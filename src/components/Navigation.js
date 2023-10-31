@@ -4,7 +4,7 @@ import "./../App.css";
 export default function Navigation() {
   return (
     <nav>
-      <ul className="navigation">
+      <ul className="navigation-items container">
         <li className="navigation-item">
           <a href="/#projects">Home</a>
         </li>

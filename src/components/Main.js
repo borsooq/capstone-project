@@ -7,7 +7,7 @@ import About from "./About";
 
 export default function Main() {
   return (
-    <main className="mainContainer">
+    <main className="container">
       <Hero />
       <Highlights />
       <Testimonials />
