@@ -222,12 +222,18 @@ body {
   margin: 0;
 }
 
-.article-highlights img {
-  border-top-right-radius: 16px;
-  border-top-left-radius: 16px;
+.article-highlights img,
+.testimonial-data img,
+.figures-about img,
+.footer-section img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.article-highlights img {
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
 }
 
 .section-testimonials {
@@ -268,8 +274,6 @@ body {
 }
 
 .testimonial-data > figure {
-  border: black;
-  border-style: dotted;
   margin: 0px 10px 5px 24px;
   height: 50px;
   width: 50px;
@@ -295,7 +299,6 @@ body {
 }
 
 .figures-about figure {
-  border-style: dotted;
   height: 330px;
   width: 280px;
   float: left;
@@ -309,6 +312,10 @@ body {
 }
 
 .footer-section {
+  background-color: var(--light-grey);
+}
+
+.footer-section > div {
   margin: var(--margin-default);
   grid-template-columns: 7fr 24fr;
   gap: 8%;
@@ -333,14 +340,19 @@ body {
 }
 
 .footer-section figure {
-  border-style: dotted;
   height: 280px;
   width: 160px;
 }
 
 .footer-items {
+  display: grid;
+  align-items: start;
   grid-template-columns: repeat(3, 1fr);
   gap: 2.5%;
+}
+
+.footer-items h4 {
+  min-height: 3rem;
 }
 
 a:link {

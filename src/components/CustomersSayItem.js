@@ -1,17 +1,19 @@
 import React from "react";
 import "./../App.css";
 
-export default function CustomersSayItem() {
+export default function CustomersSayItem(props) {
+  const { img, name, page } = props;
+
   return (
     <article className="box article-testimonials">
       <h5 className="text-smaller">Rating</h5>
       <div className="box testimonial-data">
         <figure>
-          <img src="" />
+          <img src={img} />
         </figure>
-        <h5 className="text-smaller">Name</h5>
+        <h5 className="text-smaller">{name}</h5>
       </div>
-      <a href="" className="text-smaller link">
+      <a href={page} className="text-smaller link">
         Review page
       </a>
     </article>

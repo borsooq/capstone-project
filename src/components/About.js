@@ -1,5 +1,7 @@
 import React from "react";
 import "./../App.css";
+import marioa from "./../images/Mario and Adrian A.jpg";
+import restaurantchefb from "./../images/restaurant chef B.jpg";
 
 export default function About() {
   return (
@@ -17,10 +19,10 @@ export default function About() {
         </article>
         <div className="container figures-about">
           <figure>
-            <img src="" />
+            <img src={restaurantchefb} />
           </figure>
           <figure>
-            <img src="" />
+            <img src={marioa} />
           </figure>
         </div>
       </section>
