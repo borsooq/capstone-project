@@ -9,8 +9,10 @@ export default function CallToAction() {
         <div className="green-background">
           <div className="section-hero-upper section">
             <article className="container">
-              <h1 className="title-section-big text-yellow">Little Lemon</h1>
-              <h4 className="title-subsection">Chicago</h4>
+              <header>
+                <h1 className="title-section-big text-yellow">Little Lemon</h1>
+                <h4 className="title-subsection">Chicago</h4>
+              </header>
               <p className="text-regular text-regular-bold text-hero">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla
                 consequatur vel excepturi maxime cumque molestiae vitae aut

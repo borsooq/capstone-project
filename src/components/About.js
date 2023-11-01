@@ -8,8 +8,10 @@ export default function About() {
     <>
       <section className="container section-about">
         <article>
-          <h1 className="title-section-big">Little Lemon</h1>
-          <h4 className="title-subsection">Chicago</h4>
+          <header>
+            <h1 className="title-section-big">Little Lemon</h1>
+            <h4 className="title-subsection">Chicago</h4>
+          </header>
           <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla
             consequatur vel excepturi maxime cumque molestiae vitae aut neque
