@@ -1,7 +1,7 @@
 import React from "react";
 import "./../App.css";
 
-export default function TestimonialsItem() {
+export default function CustomersSayItem() {
   return (
     <article className="box article-testimonials">
       <h5 className="text-smaller">Rating</h5>

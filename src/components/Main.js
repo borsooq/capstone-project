@@ -1,16 +1,16 @@
 import React from "react";
 import "./../App.css";
-import Hero from "./Hero";
-import Highlights from "./Highlights";
-import Testimonials from "./Testimonials";
+import CallToAction from "./CallToAction";
+import Specials from "./Specials";
+import CustomersSay from "./CustomersSay";
 import About from "./About";
 
 export default function Main() {
   return (
     <main className="container">
-      <Hero />
-      <Highlights />
-      <Testimonials />
+      <CallToAction />
+      <Specials />
+      <CustomersSay />
       <About />
     </main>
   );

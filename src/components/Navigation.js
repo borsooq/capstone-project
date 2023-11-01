@@ -1,15 +1,17 @@
-import React from "react";
 import "./../App.css";
+import React, { Routes, Route } from "react";
+import HomePage from "./HomePage";
+import BookingPage from "./BookingPage";
 
 export default function Navigation() {
   return (
     <nav>
       <ul className="navigation-items container">
         <li className="navigation-item">
-          <a href="/#projects">Home</a>
+          <a href="">Home</a>
         </li>
         <li className="navigation-item">
-          <a href="">About</a>
+          <a href="/#about">About</a>
         </li>
         <li className="navigation-item">
           <a href="">Menu</a>
