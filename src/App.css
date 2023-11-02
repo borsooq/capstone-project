@@ -354,6 +354,12 @@ img {
   min-height: 3rem;
 }
 
+.form-table {
+  display: grid;
+  max-width: 200px;
+  gap: 20px;
+}
+
 a:link {
   text-decoration: none;
 }
