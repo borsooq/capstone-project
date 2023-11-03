@@ -1,4 +1,3 @@
-import React from "react";
 import "./../App.css";
 import CallToAction from "./CallToAction";
 import Specials from "./Specials";

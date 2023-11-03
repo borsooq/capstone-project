@@ -9,7 +9,7 @@ export default function FooterItem(props) {
     <article className="box article-footer">
       <h4>{data.title}</h4>
       {data.links.map((link) => (
-        <FooterLink link={link} />
+        <FooterLink key={link.key} link={link} />
       ))}
     </article>
   );

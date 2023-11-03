@@ -1,7 +1,6 @@
 import "./../App.css";
-import React, { Routes, Route } from "react";
-import HomePage from "./HomePage";
-import BookingPage from "./BookingPage";
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Navigation() {
   return (
@@ -17,7 +16,7 @@ export default function Navigation() {
           <a href="">Menu</a>
         </li>
         <li className="navigation-item">
-          <a href="">Reservations</a>
+          <Link to="/booking-page">Reservations</Link>
         </li>
         <li className="navigation-item">
           <a href="">Order Online</a>

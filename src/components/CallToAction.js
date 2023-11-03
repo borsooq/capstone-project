@@ -1,8 +1,13 @@
 import React from "react";
 import "./../App.css";
 import restaurant from "./../images/restauranfood.jpg";
+import { Link } from "react-router-dom";
 
 export default function CallToAction() {
+  function reserveATableButtonHandler() {
+    console.log("clicked");
+  }
+
   return (
     <>
       <section className="hero-section container">
@@ -19,7 +24,11 @@ export default function CallToAction() {
                 neque eos voluptates, quidem quam culpa quae accusamus eum
                 praesentium dolor, illo veniam.
               </p>
-              <button className="btn btn-primary">Reserve a table</button>
+              <button className="btn btn-primary">
+                <Link to="/booking-page" onClick={reserveATableButtonHandler}>
+                  Reserve a table
+                </Link>
+              </button>
             </article>
             <figure className="img img-hero">
               <img src={restaurant} />

@@ -10,7 +10,7 @@ export default function Footer() {
       { linkName: "Home", url: "/", key: 1 },
       { linkName: "About", url: "/about", key: 2 },
       { linkName: "menu", url: "/menu", key: 3 },
-      { linkName: "Reservations", url: "/reservations", key: 4 },
+      { linkName: "Reservations", url: "/booking-page", key: 4 },
       { linkName: "Order Online", url: "/order-online", key: 5 },
       { linkName: "Login", url: "/login", key: 6 },
     ],

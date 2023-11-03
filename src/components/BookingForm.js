@@ -1,53 +1,55 @@
 import "./../App.css";
 import React, { useState } from "react";
 import moment from "moment";
-import Moment from "react-moment";
 
-export default function BookingForm() {
-  const [availableTimes, setAvailableTimes] = useState([
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00",
-    "22:00",
-  ]);
+export default function BookingForm(props) {
+  const { state, addReservation } = props;
+
   const [availableOccasions, setAvailableOccasions] = useState([
     "Birthday",
     "Anniversary",
   ]);
-  const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState(
+    moment().format("YYYY-MM-DD")
+  );
+
+  const [selectedTime, setSelectedTime] = useState(state[0]);
   const [selectedOccasion, setSelectedOccasion] = useState("");
-  const [numberOfGuests, setNumberOfGuests] = useState(0);
+  const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(0);
 
   const setSelectedOption = (time) => {
     setSelectedTime(time);
-
-    console.log(date);
-    console.log(numberOfGuests);
-    console.log(selectedOccasion);
   };
 
   const setSelectedOccasionHandler = (occasion) => {
     setSelectedOccasion(occasion);
+  };
 
-    console.log(date);
-    console.log(numberOfGuests);
+  const onSubmitHandler = function (e) {
+    e.preventDefault();
+    addReservation(state, {
+      reservation: {
+        date: selectedDate,
+        time: selectedTime,
+        occasion: selectedOccasion,
+        numberOfGuests: selectedNumberOfGuests,
+      },
+      type: "add",
+    });
   };
 
   return (
-    <form className="form-table">
+    <form className="form-table" onSubmit={(e) => onSubmitHandler(e)}>
       <label htmlFor="res-date">Choose date</label>
       <input
         type="date"
         id="res-date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
       />
       <label htmlFor="res-time">Choose time</label>
       <select id="res-time" onChange={(e) => setSelectedOption(e.target.value)}>
-        {availableTimes.map((time) => {
+        {state.map((time) => {
           return (
             <option key={time} value={time}>
               {time}
@@ -62,8 +64,8 @@ export default function BookingForm() {
         min="1"
         max="10"
         id="guests"
-        value={numberOfGuests}
-        onChange={(e) => setNumberOfGuests(e.target.value)}
+        value={selectedNumberOfGuests}
+        onChange={(e) => setSelectedNumberOfGuests(e.target.value)}
       />
       <label htmlFor="occasion">Occasion</label>
       <select

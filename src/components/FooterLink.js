@@ -1,12 +1,13 @@
 import React from "react";
 import "./../App.css";
+import { Link } from "react-router-dom";
 
 export default function FooterLink(props) {
   const { link } = props;
 
   return (
-    <a href={link.url} key={link.key} className="link link-footer">
+    <Link to={link.url} key={link.key} className="link link-footer">
       {link.linkName}
-    </a>
+    </Link>
   );
 }
