@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import moment from "moment";
 
 export default function BookingForm(props) {
-  const { state, addReservation } = props;
-
   const [availableOccasions, setAvailableOccasions] = useState([
     "Birthday",
     "Anniversary",
@@ -13,7 +11,7 @@ export default function BookingForm(props) {
     moment().format("YYYY-MM-DD")
   );
 
-  const [selectedTime, setSelectedTime] = useState(state[0]);
+  const [selectedTime, setSelectedTime] = useState();
   const [selectedOccasion, setSelectedOccasion] = useState("");
   const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(0);
 
@@ -27,15 +25,7 @@ export default function BookingForm(props) {
 
   const onSubmitHandler = function (e) {
     e.preventDefault();
-    addReservation(state, {
-      reservation: {
-        date: selectedDate,
-        time: selectedTime,
-        occasion: selectedOccasion,
-        numberOfGuests: selectedNumberOfGuests,
-      },
-      type: "add",
-    });
+    props.dispatch(props.state, selectedTime);
   };
 
   return (
@@ -48,10 +38,14 @@ export default function BookingForm(props) {
         onChange={(e) => setSelectedDate(e.target.value)}
       />
       <label htmlFor="res-time">Choose time</label>
-      <select id="res-time" onChange={(e) => setSelectedOption(e.target.value)}>
-        {state.map((time) => {
+      <select
+        data-testid="select-time"
+        id="res-time"
+        onChange={(e) => setSelectedOption(e.target.value)}
+      >
+        {props.state?.map((time) => {
           return (
-            <option key={time} value={time}>
+            <option key={time} value={time} data-testid="select-option">
               {time}
             </option>
           );
@@ -64,6 +58,7 @@ export default function BookingForm(props) {
         min="1"
         max="10"
         id="guests"
+        data-testid="select-guests"
         value={selectedNumberOfGuests}
         onChange={(e) => setSelectedNumberOfGuests(e.target.value)}
       />
