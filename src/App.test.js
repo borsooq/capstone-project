@@ -39,9 +39,10 @@ test("Renders the BookingPage heading", () => {
 
 test("Checks Initialize availableTimes", () => {
   const testedValue = "17:00";
+  const handleDispatch = jest.fn();
 
   const { getByTestId, getAllByTestId } = render(
-    <BookingForm state={[testedValue]} />
+    <BookingForm state={[testedValue]} dispatch={handleDispatch} />
   );
   fireEvent.change(getByTestId("select-time"), {
     target: { value: testedValue },

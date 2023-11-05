@@ -14,38 +14,39 @@ function App() {
   const [availableTimes, setAvailableTimes] = useState();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchAPI("2023-09-18");
-      setAvailableTimes(data);
-    };
-
-    fetchData();
+    const currentDate = new Date();
+    const currentDateString = formatDate(currentDate);
+    initializeTimes(currentDateString);
   }, []);
 
-  const initializeTimes = { time: "00:00" };
+  async function initializeTimes(date) {
+    const data = await fetchAPI(date);
+    setAvailableTimes(data);
+  }
+
+  function formatDate(value) {
+    var d = new Date(value),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  }
 
   const [state, dispatch] = useReducer(updateTimes, initializeTimes);
 
   function updateTimes(state, action) {
     console.log(action);
-    switch (action.type) {
-      case "17:00": {
-        return "17:00";
+    console.log(state);
+    switch (action) {
+      case "updateDate": {
+        initializeTimes(state);
       }
-      case "18:00": {
-        return "18:00";
-      }
-      case "19:00": {
-        return "19:00";
-      }
-      case "20:00": {
-        return "20:00";
-      }
-      case "21:00": {
-        return "21:00";
-      }
-      case "22:00": {
-        return "22:00";
+      case "updateTime": {
+        return state;
       }
       default:
         return state;

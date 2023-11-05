@@ -7,6 +7,12 @@ export default function BookingForm(props) {
     "Birthday",
     "Anniversary",
   ]);
+
+  function dateChangeHandler(date) {
+    setSelectedDate(date);
+    props.dispatch(date, "updateDate");
+  }
+
   const [selectedDate, setSelectedDate] = useState(
     moment().format("YYYY-MM-DD")
   );
@@ -35,13 +41,17 @@ export default function BookingForm(props) {
         type="date"
         id="res-date"
         value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
+        onChange={(e) => {
+          dateChangeHandler(e.target.value);
+        }}
       />
       <label htmlFor="res-time">Choose time</label>
       <select
         data-testid="select-time"
         id="res-time"
-        onChange={(e) => setSelectedOption(e.target.value)}
+        onChange={(e) => {
+          props.dispatch(e.target.value, "updateTime");
+        }}
       >
         {props.state?.map((time) => {
           return (
