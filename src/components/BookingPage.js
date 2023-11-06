@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import "./../App.css";
 import BookingForm from "./BookingForm";
-import useLocalStorage from "./useLocalStorage.js";
 
 export default function BookingPage(props) {
   return (
@@ -12,12 +11,11 @@ export default function BookingPage(props) {
         dispatch={props.dispatch}
         submitForm={props.submitForm}
         selectedDate={props.selectedDate}
-        //saveLocalData={props.saveLocalData}
       />
       <table data-testid="bookings">
         <thead>
           <tr>
-            <th data-testid="table-date">Date</th>
+            <th>Date</th>
             <th>Time</th>
             <th>Number of guests</th>
             <th>Occasion</th>
@@ -26,7 +24,7 @@ export default function BookingPage(props) {
         <tbody>
           {props.booked?.map((booking, index) => {
             return (
-              <tr data-testid={booking.date} key={index}>
+              <tr key={index}>
                 <td>{booking.date}</td>
                 <td>{booking.time}</td>
                 <td>{booking.guests}</td>
