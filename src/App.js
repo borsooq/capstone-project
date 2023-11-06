@@ -1,22 +1,28 @@
 import "./App.css";
+import { formatDate } from "./components/Utilities.js";
+import useLocalStorage from "./components/useLocalStorage.js";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/BookingPage";
 import About from "./components/About";
 import Menu from "./components/Menu";
 import Reservations from "./components/Reservations";
 import OrderOnline from "./components/OrderOnline";
+import ConfirmedBooking from "./components/ConfirmedBooking";
 import Login from "./components/Login";
-import { Routes, Route, useRoutes } from "react-router-dom";
+import { Routes, Route, useRoutes, useNavigate } from "react-router-dom";
 import React, { useReducer, useState, useEffect } from "react";
 import { fetchAPI, submitAPI } from "./mockAPI";
 
 function App() {
   const [availableTimes, setAvailableTimes] = useState();
+  const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
+  const [booked, setBooked] = useLocalStorage("booked", [{}]);
+  const [state, dispatch] = useReducer(updateTimes, initializeTimes);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const currentDate = new Date();
-    const currentDateString = formatDate(currentDate);
-    initializeTimes(currentDateString);
+    initializeTimes(selectedDate);
   }, []);
 
   async function initializeTimes(date) {
@@ -24,25 +30,18 @@ function App() {
     setAvailableTimes(data);
   }
 
-  function formatDate(value) {
-    var d = new Date(value),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
+  async function submitForm(form) {
+    console.log(JSON.stringify(form));
+    const result = await submitAPI(form);
+    if (result === true) {
+      navigate("/Confirmation");
+    }
   }
 
-  const [state, dispatch] = useReducer(updateTimes, initializeTimes);
-
   function updateTimes(state, action) {
-    console.log(action);
-    console.log(state);
     switch (action) {
       case "updateDate": {
+        setSelectedDate(state);
         initializeTimes(state);
       }
       case "updateTime": {
@@ -60,7 +59,13 @@ function App() {
         <Route
           path="/booking-page"
           element={
-            <BookingPage state={availableTimes} dispatch={updateTimes} />
+            <BookingPage
+              state={availableTimes}
+              dispatch={updateTimes}
+              booked={booked}
+              selectedDate={selectedDate}
+              submitForm={submitForm}
+            />
           }
         />
         <Route path="/about" element={<About />} />
@@ -71,6 +76,7 @@ function App() {
         />
         <Route path="/order-online" element={<OrderOnline />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/Confirmation" element={<ConfirmedBooking />} />
       </Routes>
     </>
   );

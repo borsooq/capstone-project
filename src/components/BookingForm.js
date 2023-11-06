@@ -1,46 +1,59 @@
 import "./../App.css";
 import React, { useState } from "react";
-import moment from "moment";
+import useLocalStorage from "./useLocalStorage.js";
 
 export default function BookingForm(props) {
-  const [availableOccasions, setAvailableOccasions] = useState([
-    "Birthday",
-    "Anniversary",
-  ]);
-
-  function dateChangeHandler(date) {
-    setSelectedDate(date);
-    props.dispatch(date, "updateDate");
-  }
-
-  const [selectedDate, setSelectedDate] = useState(
-    moment().format("YYYY-MM-DD")
+  const availableOccasions = ["Birthday", "Anniversary"];
+  const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(1);
+  const [booked, setBooked] = useLocalStorage("booked", [{}]);
+  const [selectedOccasion, setSelectedOccasion] = useState(
+    availableOccasions[0]
   );
 
   const [selectedTime, setSelectedTime] = useState();
-  const [selectedOccasion, setSelectedOccasion] = useState("");
-  const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(0);
 
-  const setSelectedOption = (time) => {
+  function dateChangeHandler(date) {
+    props.dispatch(date, "updateDate");
+  }
+
+  function selectedTimeHandler(time) {
     setSelectedTime(time);
-  };
+    props.dispatch(time, "updateTime");
+  }
 
   const setSelectedOccasionHandler = (occasion) => {
     setSelectedOccasion(occasion);
+    props.dispatch(occasion, "updateOccasion");
   };
 
-  const onSubmitHandler = function (e) {
-    e.preventDefault();
-    props.dispatch(props.state, selectedTime);
+  const setSelectedNumberOfGuestsHandler = (numberOfGuests) => {
+    setSelectedNumberOfGuests(numberOfGuests);
+    props.dispatch(numberOfGuests, "updateNumberOfGuests");
   };
 
   return (
-    <form className="form-table" onSubmit={(e) => onSubmitHandler(e)}>
+    <form
+      className="form-table"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = {
+          guests: selectedNumberOfGuests,
+          occasion: selectedOccasion,
+          time: selectedTime ?? props.state[0],
+          date: props.selectedDate,
+        };
+
+        props.submitForm(formData);
+        props.dispatch(formData, "addReservation");
+        setBooked([...booked, formData]);
+        //props.saveLocalData(formData);
+      }}
+    >
       <label htmlFor="res-date">Choose date</label>
       <input
         type="date"
         id="res-date"
-        value={selectedDate}
+        value={props.selectedDate}
         onChange={(e) => {
           dateChangeHandler(e.target.value);
         }}
@@ -50,6 +63,7 @@ export default function BookingForm(props) {
         data-testid="select-time"
         id="res-time"
         onChange={(e) => {
+          selectedTimeHandler(e.target.value);
           props.dispatch(e.target.value, "updateTime");
         }}
       >
@@ -70,7 +84,7 @@ export default function BookingForm(props) {
         id="guests"
         data-testid="select-guests"
         value={selectedNumberOfGuests}
-        onChange={(e) => setSelectedNumberOfGuests(e.target.value)}
+        onChange={(e) => setSelectedNumberOfGuestsHandler(e.target.value)}
       />
       <label htmlFor="occasion">Occasion</label>
       <select

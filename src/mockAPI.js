@@ -34,8 +34,6 @@ const availableTimesByDate = {
 };
 
 const fetchAPI = (date) => {
-  console.log("called");
-  console.log(date);
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (availableTimesByDate[date]) {
@@ -48,6 +46,8 @@ const fetchAPI = (date) => {
 };
 
 const submitAPI = (formData) => {
+  console.log(`form Data => ${JSON.stringify(formData)}`);
+
   availableTimesByDate[formData.date] = availableTimesByDate[
     formData.date
   ].filter((time) => time !== formData.time);

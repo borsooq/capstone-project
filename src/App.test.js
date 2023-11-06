@@ -63,19 +63,64 @@ test("Checks updateTimes return value", () => {
   ];
   const testedValue = "17:00";
   const handleSubmit = jest.fn();
+  const handleDispatch = jest.fn();
+  const handleSaveLocalData = jest.fn();
 
   const { getByTestId, getAllByTestId } = render(
-    <BookingForm state={[initializeWithValues]} dispatch={handleSubmit} />
+    <BookingForm
+      state={[initializeWithValues]}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+      saveLocalData={handleSaveLocalData}
+    />
   );
   fireEvent.change(getByTestId("select-time"), {
     target: { value: testedValue },
   });
 
-  const numberOfGuests = getByTestId("select-guests");
-  fireEvent.change(numberOfGuests, { target: { value: 1 } });
-
   const submitButton = screen.getByRole("button");
   fireEvent.click(submitButton);
 
   expect(handleSubmit).toHaveBeenCalled();
+});
+
+test("Checks saveLocalData", () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getAllByTestId } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+  const submitButton = screen.getByRole("button");
+  fireEvent.click(submitButton);
+  //expect(handleSaveLocalData).toHaveBeenCalled();
+  expect(localStorage.setItem).toHaveBeenCalled();
+});
+
+test("Checks getFromLocalData", () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.getItem = jest.fn([
+    { guests: 1, occasion: "Birthday", time: "11:00", date: "2023-11-05" },
+  ]);
+
+  const { getByTestId, getAllByTestId } = render(
+    <BookingPage
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+      booked={[]}
+    />
+  );
+
+  expect(localStorage.getItem).toHaveBeenCalled();
 });
