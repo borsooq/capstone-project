@@ -1,39 +1,25 @@
 import React from "react";
+import useLocalStorage from "./useLocalStorage.js";
 import "./../App.css";
 import BookingForm from "./BookingForm";
+import BookingList from "./BookingList";
+import Nav from "./Nav";
 
 export default function BookingPage(props) {
+  const [booked, setBooked] = useLocalStorage("booked", [{}]);
   return (
     <>
-      <h2>Booking Page</h2>
-      <BookingForm
-        state={props.state}
-        dispatch={props.dispatch}
-        submitForm={props.submitForm}
-        selectedDate={props.selectedDate}
-      />
-      <table data-testid="bookings">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Number of guests</th>
-            <th>Occasion</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.booked?.map((booking, index) => {
-            return (
-              <tr key={index}>
-                <td>{booking.date}</td>
-                <td>{booking.time}</td>
-                <td>{booking.guests}</td>
-                <td>{booking.occasion}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Nav />
+      <main className="container">
+        <h2>Booking Page</h2>
+        <BookingForm
+          state={props.state}
+          dispatch={props.dispatch}
+          submitForm={props.submitForm}
+          selectedDate={props.selectedDate}
+        />
+        <BookingList booked={booked} />
+      </main>
     </>
   );
 }

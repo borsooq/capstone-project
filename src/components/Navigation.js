@@ -7,7 +7,7 @@ export default function Navigation() {
     <nav>
       <ul className="navigation-items container">
         <li className="navigation-item">
-          <a href="">Home</a>
+          <a href="/">Home</a>
         </li>
         <li className="navigation-item">
           <a href="/#about">About</a>

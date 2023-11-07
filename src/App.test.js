@@ -32,7 +32,11 @@ test("Renders a button in BookingForm", () => {
 });
 
 test("Renders the BookingPage heading", () => {
-  render(<BookingPage state={["17:00"]} />);
+  render(
+    <MemoryRouter>
+      <BookingPage state={["17:00"]} />
+    </MemoryRouter>
+  );
   const headingElement = screen.getByText(/Booking Page/i);
   expect(headingElement).toBeInTheDocument();
 });
@@ -100,26 +104,16 @@ test("Checks saveLocalData", () => {
   );
   const submitButton = screen.getByRole("button");
   fireEvent.click(submitButton);
-  //expect(handleSaveLocalData).toHaveBeenCalled();
   expect(localStorage.setItem).toHaveBeenCalled();
 });
 
 test("Checks getFromLocalData", () => {
-  const testedValue = "17:00";
-  const handleDispatch = jest.fn();
-  const handleSubmit = jest.fn();
-  Storage.prototype.getItem = jest.fn([
-    { guests: 1, occasion: "Birthday", time: "11:00", date: "2023-11-05" },
-  ]);
+  Storage.prototype.getItem = jest.fn([{}]);
 
-  const { getByTestId, getAllByTestId } = render(
-    <BookingPage
-      state={[testedValue]}
-      selectedDate={"2023-11-25"}
-      dispatch={handleDispatch}
-      submitForm={handleSubmit}
-      booked={[]}
-    />
+  const {} = render(
+    <MemoryRouter>
+      <BookingPage />
+    </MemoryRouter>
   );
 
   expect(localStorage.getItem).toHaveBeenCalled();

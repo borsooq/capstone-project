@@ -46,7 +46,6 @@ export default function BookingForm(props) {
         props.submitForm(formData);
         props.dispatch(formData, "addReservation");
         setBooked([...booked, formData]);
-        //props.saveLocalData(formData);
       }}
     >
       <label htmlFor="res-date">Choose date</label>

@@ -1,6 +1,5 @@
 import "./App.css";
 import { formatDate } from "./components/Utilities.js";
-import useLocalStorage from "./components/useLocalStorage.js";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/BookingPage";
 import About from "./components/About";
@@ -16,7 +15,6 @@ import { fetchAPI, submitAPI } from "./mockAPI";
 function App() {
   const [availableTimes, setAvailableTimes] = useState();
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
-  const [booked, setBooked] = useLocalStorage("booked", [{}]);
   const [state, dispatch] = useReducer(updateTimes, initializeTimes);
 
   const navigate = useNavigate();
@@ -31,7 +29,6 @@ function App() {
   }
 
   async function submitForm(form) {
-    console.log(JSON.stringify(form));
     const result = await submitAPI(form);
     if (result === true) {
       navigate("/Confirmation");
@@ -62,7 +59,6 @@ function App() {
             <BookingPage
               state={availableTimes}
               dispatch={updateTimes}
-              booked={booked}
               selectedDate={selectedDate}
               submitForm={submitForm}
             />
