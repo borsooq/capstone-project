@@ -33,6 +33,10 @@ body {
   display: grid;
 }
 
+.invalid {
+  border-color: red;
+}
+
 .section {
   margin: var(--margin-default);
 }

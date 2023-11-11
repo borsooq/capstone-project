@@ -9,3 +9,7 @@ export const formatDate = (value) => {
 
   return [year, month, day].join("-");
 };
+
+export const parseDate = (date) => {
+  return Date.parse(date);
+};

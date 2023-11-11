@@ -41,13 +41,11 @@ const fetchAPI = (date) => {
       } else {
         reject(new Error("No available times for the selected date."));
       }
-    }, 1000);
+    }, 3000);
   });
 };
 
 const submitAPI = (formData) => {
-  console.log(`form Data => ${JSON.stringify(formData)}`);
-
   availableTimesByDate[formData.date] = availableTimesByDate[
     formData.date
   ].filter((time) => time !== formData.time);

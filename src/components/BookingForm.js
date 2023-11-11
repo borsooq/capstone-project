@@ -1,19 +1,51 @@
 import "./../App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useLocalStorage from "./useLocalStorage.js";
 
 export default function BookingForm(props) {
+  const [submitAvailable, setSubmitAvailable] = useState(false);
   const availableOccasions = ["Birthday", "Anniversary"];
   const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(1);
+  const [selectedDate, setSelectedDate] = useState();
+  const [selectedNewDate, setSelectedNewDate] = useState(props.selectedDate);
+  const [selectedDateValid, setSelectedDateValid] = useState(true);
   const [booked, setBooked] = useLocalStorage("booked", [{}]);
   const [selectedOccasion, setSelectedOccasion] = useState(
     availableOccasions[0]
   );
-
   const [selectedTime, setSelectedTime] = useState();
 
+  useEffect(() => {
+    updateDates(props.selectedDate);
+    updateAvailableTimes(props.state);
+  }, [props.state]);
+
+  function updateAvailableTimes(times) {
+    if (times && times.length !== 0) {
+      setSubmitAvailable(true);
+    }
+  }
+
+  function updateDates(selectedDate) {
+    setSelectedNewDate(selectedDate);
+    setSelectedDate(selectedDate);
+  }
+
+  function validateReservationDate(value) {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const selectedDate = Date.parse(value);
+    return today <= selectedDate;
+  }
+
   function dateChangeHandler(date) {
-    props.dispatch(date, "updateDate");
+    setSelectedNewDate(date);
+    const isValidDate = validateReservationDate(date);
+
+    setSelectedDateValid(isValidDate);
+
+    if (isValidDate) {
+      props.dispatch(date, "updateDate");
+    }
   }
 
   function selectedTimeHandler(time) {
@@ -31,35 +63,45 @@ export default function BookingForm(props) {
     props.dispatch(numberOfGuests, "updateNumberOfGuests");
   };
 
+  function submitForm(formData) {
+    props.submitForm(formData);
+    props.dispatch(formData, "addReservation");
+    setBooked([...booked, formData]);
+  }
+
+  function onSubmitHandler(e) {
+    e.preventDefault();
+    const formData = {
+      guests: selectedNumberOfGuests,
+      occasion: selectedOccasion,
+      time: selectedTime ?? props.state[0],
+      date: selectedDate,
+    };
+
+    submitForm(formData);
+  }
+
   return (
     <form
       className="form-table"
       onSubmit={(e) => {
-        e.preventDefault();
-        const formData = {
-          guests: selectedNumberOfGuests,
-          occasion: selectedOccasion,
-          time: selectedTime ?? props.state[0],
-          date: props.selectedDate,
-        };
-
-        props.submitForm(formData);
-        props.dispatch(formData, "addReservation");
-        setBooked([...booked, formData]);
+        onSubmitHandler(e);
       }}
     >
       <label htmlFor="res-date">Choose date</label>
       <input
         type="date"
         id="res-date"
-        value={props.selectedDate}
+        value={selectedNewDate}
         onChange={(e) => {
           dateChangeHandler(e.target.value);
         }}
+        className={selectedDateValid === true ? "valid" : "invalid"}
       />
       <label htmlFor="res-time">Choose time</label>
       <select
         data-testid="select-time"
+        disabled={props.selectedDate !== selectedDate || !selectedDateValid}
         id="res-time"
         onChange={(e) => {
           selectedTimeHandler(e.target.value);
@@ -98,7 +140,15 @@ export default function BookingForm(props) {
           );
         })}
       </select>
-      <input type="submit" value="Make Your reservation" />
+      <input
+        type="submit"
+        value="Make Your reservation"
+        disabled={
+          !submitAvailable ||
+          props.selectedDate !== selectedDate ||
+          !selectedDateValid
+        }
+      />
     </form>
   );
 }
