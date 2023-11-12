@@ -223,3 +223,26 @@ test("Checks guests validation - too many", async () => {
     )
   );
 });
+
+test("Checks if submission is possible when validation errors present", async () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getByLabelText } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+
+  const dateParagraph = getByLabelText("Choose date");
+  fireEvent.change(dateParagraph, { target: { value: "2025-11-01" } });
+
+  await waitFor(() => document.querySelector(".btn-primary")).then(() =>
+    expect(getByTestId("submit")).toBeDisabled()
+  );
+});
