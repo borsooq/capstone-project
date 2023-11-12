@@ -21,7 +21,9 @@ export default function CallToAction() {
                 praesentium dolor, illo veniam.
               </p>
               <button className="btn btn-primary">
-                <Link to="/booking-page">Reserve a table</Link>
+                <Link to="/booking-page" aria-label="On Click">
+                  Reserve a table
+                </Link>
               </button>
             </article>
             <figure className="img img-hero">

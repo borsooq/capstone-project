@@ -38,6 +38,10 @@ body {
   border-width: 3px;
 }
 
+.info {
+  color: green;
+}
+
 .section {
   margin: var(--margin-default);
 }
@@ -369,14 +373,26 @@ a:link {
   text-decoration: none;
 }
 
-.booking-page h2 {
+.booking-page h2,
+.confirmation-page h1 {
   text-align: center;
   margin: 5rem;
+}
+
+.confirmation-page h1 {
+  font-family: var(--markazi);
+  font-size: var(--largest-font);
+  color: var(--yellow);
 }
 
 .booking-form {
   width: 50%;
   margin: 0 auto;
+}
+
+.confirmation {
+  margin: 0 auto;
+  text-align: center;
 }
 
 .form-booking {
@@ -397,9 +413,15 @@ a:link {
 }
 
 .form-booking fieldset p > div {
+  display: grid;
+  align-items: center;
   font-size: var(--smaller);
   color: red;
   margin-left: 1rem;
+}
+
+.form-booking fieldset p > div.info {
+  color: green;
 }
 
 .form-booking fieldset p {
@@ -418,6 +440,10 @@ a:link {
 .form-booking input[type="submit"] {
   color: black;
   justify-self: center;
+}
+
+.confirmation button {
+  margin-bottom: 5rem;
 }
 
 .booking-table {

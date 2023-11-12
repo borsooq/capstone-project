@@ -16,6 +16,7 @@ export default function BookingForm(props) {
   const [selectedOccasion, setSelectedOccasion] = useState(
     availableOccasions[0]
   );
+  const [loadingTimes, setLoadingTimes] = useState(true);
   const maxDaysForward = 30;
   const maxNumberOfGuests = 10;
   const minNumberOfGuests = 1;
@@ -34,6 +35,7 @@ export default function BookingForm(props) {
   function updateAvailableTimes(times) {
     if (times && times.length !== 0) {
       setSubmitAvailable(true);
+      setLoadingTimes(false);
     }
   }
 
@@ -79,6 +81,7 @@ export default function BookingForm(props) {
     const isValid = validateDate(date);
 
     if (isValid) {
+      setLoadingTimes(true);
       props.dispatch(date, "updateDate");
     }
   }
@@ -160,6 +163,11 @@ export default function BookingForm(props) {
               );
             })}
           </select>
+          {loadingTimes && (
+            <div className="info" data-testid="loading">
+              Loading...
+            </div>
+          )}
         </p>
         <p>
           <label htmlFor="guests">Number of guests</label>
@@ -172,6 +180,12 @@ export default function BookingForm(props) {
             data-testid="select-guests"
             value={selectedNumberOfGuests}
             onChange={(e) => setSelectedNumberOfGuestsHandler(e.target.value)}
+            className={
+              selectedNumberOfGuests > maxNumberOfGuests ||
+              selectedNumberOfGuests < minNumberOfGuests
+                ? "invalid"
+                : "valid"
+            }
           />
           {selectedNumberOfGuests > maxNumberOfGuests && (
             <div data-testid="select-guests-error">
@@ -211,6 +225,7 @@ export default function BookingForm(props) {
           props.selectedDate !== selectedDate ||
           !selectedDateValid
         }
+        aria-label="On Click"
       />
     </form>
   );

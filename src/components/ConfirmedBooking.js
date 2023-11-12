@@ -7,11 +7,13 @@ export default function ConfirmedBooking() {
   return (
     <>
       <Nav />
-      <main className="container">
-        <h1>Confirmed reservation</h1>
-        <button className="btn btn-primary">
-          <Link to="/booking-page">Back to Booking Page</Link>
-        </button>
+      <main className="container green-background confirmation-page">
+        <section className="confirmation">
+          <h1>Confirmed reservation</h1>
+          <button className="btn btn-primary">
+            <Link to="/booking-page">Back to Booking Page</Link>
+          </button>
+        </section>
       </main>
     </>
   );
