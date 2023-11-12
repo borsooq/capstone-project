@@ -1,5 +1,5 @@
 import "./App.css";
-import { formatDate, parseDate } from "./components/Utilities.js";
+import { formatDate } from "./components/Utilities.js";
 import HomePage from "./components/HomePage";
 import BookingPage from "./components/BookingPage";
 import About from "./components/About";

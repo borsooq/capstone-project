@@ -1,9 +1,16 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  prettyDOM,
+  waitFor,
+} from "@testing-library/react";
+
 import BookingForm from "./components/BookingForm";
 import HomePage from "./components/HomePage";
 import App from "./App";
 import BookingPage from "./components/BookingPage";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 test("Renders Homepage", () => {
   render(
@@ -27,7 +34,7 @@ test("App Renders Homepage", () => {
 
 test("Renders a button in BookingForm", () => {
   render(<BookingForm state={["17:00"]} />);
-  const headingElement = screen.getByText("Make Your reservation");
+  const headingElement = screen.getByText("Reserve");
   expect(headingElement).toBeInTheDocument();
 });
 
@@ -70,7 +77,7 @@ test("Checks updateTimes return value", () => {
   const handleDispatch = jest.fn();
   const handleSaveLocalData = jest.fn();
 
-  const { getByTestId, getAllByTestId } = render(
+  const { getByTestId } = render(
     <BookingForm
       state={[initializeWithValues]}
       dispatch={handleDispatch}
@@ -94,7 +101,7 @@ test("Checks saveLocalData", () => {
   const handleSubmit = jest.fn();
   Storage.prototype.setItem = jest.fn();
 
-  const { getByTestId, getAllByTestId } = render(
+  const {} = render(
     <BookingForm
       state={[testedValue]}
       selectedDate={"2023-11-25"}
@@ -117,4 +124,102 @@ test("Checks getFromLocalData", () => {
   );
 
   expect(localStorage.getItem).toHaveBeenCalled();
+});
+
+test("Checks date validation - date in the past", async () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getByLabelText } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+
+  const dateParagraph = getByLabelText("Choose date");
+  fireEvent.change(dateParagraph, { target: { value: "2020-11-25" } });
+
+  await waitFor(() => document.querySelector(".error-date")).then(() =>
+    expect(getByTestId("error-date").innerHTML).toEqual(
+      "Date cannot be in the past"
+    )
+  );
+});
+
+test("Checks date validation - date in too far future", async () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getByLabelText } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+
+  const dateParagraph = getByLabelText("Choose date");
+  fireEvent.change(dateParagraph, { target: { value: "2025-11-01" } });
+
+  await waitFor(() => document.querySelector(".error-date")).then(() =>
+    expect(getByTestId("error-date").innerHTML).toEqual(
+      "We don't do reservations for this date yet"
+    )
+  );
+});
+
+test("Checks guests validation - too few", async () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getByLabelText } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+
+  const guests = getByLabelText("Number of guests");
+  fireEvent.change(guests, { target: { value: "0" } });
+
+  await waitFor(() => document.querySelector(".error-date")).then(() =>
+    expect(getByTestId("select-guests-error").innerHTML).toEqual("Minimum is 1")
+  );
+});
+
+test("Checks guests validation - too many", async () => {
+  const testedValue = "17:00";
+  const handleDispatch = jest.fn();
+  const handleSubmit = jest.fn();
+  Storage.prototype.setItem = jest.fn();
+
+  const { getByTestId, getByLabelText } = render(
+    <BookingForm
+      state={[testedValue]}
+      selectedDate={"2023-11-25"}
+      dispatch={handleDispatch}
+      submitForm={handleSubmit}
+    />
+  );
+
+  const guests = getByLabelText("Number of guests");
+  fireEvent.change(guests, { target: { value: "11" } });
+
+  await waitFor(() => document.querySelector(".error-date")).then(() =>
+    expect(getByTestId("select-guests-error").innerHTML).toEqual(
+      "Maximum is 10"
+    )
+  );
 });

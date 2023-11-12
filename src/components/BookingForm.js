@@ -1,24 +1,35 @@
 import "./../App.css";
 import React, { useEffect, useState } from "react";
 import useLocalStorage from "./useLocalStorage.js";
+import { formatDate } from "./Utilities.js";
 
 export default function BookingForm(props) {
   const [submitAvailable, setSubmitAvailable] = useState(false);
-  const availableOccasions = ["Birthday", "Anniversary"];
-  const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(1);
   const [selectedDate, setSelectedDate] = useState();
   const [selectedNewDate, setSelectedNewDate] = useState(props.selectedDate);
   const [selectedDateValid, setSelectedDateValid] = useState(true);
+  const [validationErrorMessage, setValidationErrorMessage] = useState();
   const [booked, setBooked] = useLocalStorage("booked", [{}]);
+  const [selectedTime, setSelectedTime] = useState();
+  const [selectedNumberOfGuests, setSelectedNumberOfGuests] = useState(1);
+  const availableOccasions = ["Birthday", "Anniversary"];
   const [selectedOccasion, setSelectedOccasion] = useState(
     availableOccasions[0]
   );
-  const [selectedTime, setSelectedTime] = useState();
+  const maxDaysForward = 30;
+  const maxNumberOfGuests = 10;
+  const minNumberOfGuests = 1;
 
   useEffect(() => {
     updateDates(props.selectedDate);
     updateAvailableTimes(props.state);
   }, [props.state]);
+
+  function getMaxDate() {
+    const today = new Date();
+    let aMonthForward = new Date();
+    return aMonthForward.setDate(today.getDate() + maxDaysForward);
+  }
 
   function updateAvailableTimes(times) {
     if (times && times.length !== 0) {
@@ -31,19 +42,43 @@ export default function BookingForm(props) {
     setSelectedDate(selectedDate);
   }
 
-  function validateReservationDate(value) {
+  function validateTooEarlyReservationDate(value) {
     const today = new Date().setHours(0, 0, 0, 0);
     const selectedDate = Date.parse(value);
-    return today <= selectedDate;
+
+    const validationResult = today <= selectedDate;
+
+    return validationResult;
+  }
+
+  function validateTooLateReservationDate(value) {
+    const maxDate = getMaxDate();
+    const selectedDate = Date.parse(value);
+
+    const validationResult = selectedDate < maxDate;
+
+    return validationResult;
+  }
+
+  function validateDate(date) {
+    const isNotTooEarly = validateTooEarlyReservationDate(date);
+    const isNotTooLate = validateTooLateReservationDate(date);
+
+    !isNotTooEarly && setValidationErrorMessage("Date cannot be in the past");
+    !isNotTooLate &&
+      setValidationErrorMessage("We don't do reservations for this date yet");
+
+    setSelectedDateValid(isNotTooEarly && isNotTooLate);
+
+    return isNotTooEarly && isNotTooLate;
   }
 
   function dateChangeHandler(date) {
     setSelectedNewDate(date);
-    const isValidDate = validateReservationDate(date);
 
-    setSelectedDateValid(isValidDate);
+    const isValid = validateDate(date);
 
-    if (isValidDate) {
+    if (isValid) {
       props.dispatch(date, "updateDate");
     }
   }
@@ -60,7 +95,6 @@ export default function BookingForm(props) {
 
   const setSelectedNumberOfGuestsHandler = (numberOfGuests) => {
     setSelectedNumberOfGuests(numberOfGuests);
-    props.dispatch(numberOfGuests, "updateNumberOfGuests");
   };
 
   function submitForm(formData) {
@@ -83,66 +117,95 @@ export default function BookingForm(props) {
 
   return (
     <form
-      className="form-table"
+      className="form-booking"
       onSubmit={(e) => {
         onSubmitHandler(e);
       }}
     >
-      <label htmlFor="res-date">Choose date</label>
+      <fieldset>
+        <p>
+          <label htmlFor="res-date">Choose date</label>
+          <input
+            data-testid="input-date"
+            type="date"
+            id="res-date"
+            value={selectedNewDate}
+            min={new Date().toJSON().slice(0, 10)}
+            max={formatDate(new Date(getMaxDate()))}
+            onChange={(e) => {
+              dateChangeHandler(e.target.value);
+            }}
+            className={selectedDateValid === true ? "valid" : "invalid"}
+          />
+          {!selectedDateValid && (
+            <div data-testid="error-date">{validationErrorMessage}</div>
+          )}
+        </p>
+        <p>
+          <label htmlFor="res-time">Choose time</label>
+          <select
+            data-testid="select-time"
+            disabled={props.selectedDate !== selectedDate || !selectedDateValid}
+            id="res-time"
+            onChange={(e) => {
+              selectedTimeHandler(e.target.value);
+              props.dispatch(e.target.value, "updateTime");
+            }}
+          >
+            {props.state?.map((time) => {
+              return (
+                <option key={time} value={time} data-testid="select-option">
+                  {time}
+                </option>
+              );
+            })}
+          </select>
+        </p>
+        <p>
+          <label htmlFor="guests">Number of guests</label>
+          <input
+            type="number"
+            placeholder="1"
+            min={minNumberOfGuests}
+            max={maxNumberOfGuests}
+            id="guests"
+            data-testid="select-guests"
+            value={selectedNumberOfGuests}
+            onChange={(e) => setSelectedNumberOfGuestsHandler(e.target.value)}
+          />
+          {selectedNumberOfGuests > maxNumberOfGuests && (
+            <div data-testid="select-guests-error">
+              Maximum is {maxNumberOfGuests}
+            </div>
+          )}
+          {selectedNumberOfGuests < minNumberOfGuests && (
+            <div data-testid="select-guests-error">
+              Minimum is {minNumberOfGuests}
+            </div>
+          )}
+        </p>
+        <p>
+          <label htmlFor="occasion">Occasion</label>
+          <select
+            data-testid="input-occasion"
+            id="occasion"
+            onChange={(e) => setSelectedOccasionHandler(e.target.value)}
+          >
+            {availableOccasions.map((availableOccasion) => {
+              return (
+                <option key={availableOccasion} value={availableOccasion}>
+                  {availableOccasion}
+                </option>
+              );
+            })}
+          </select>
+        </p>
+      </fieldset>
       <input
-        type="date"
-        id="res-date"
-        value={selectedNewDate}
-        onChange={(e) => {
-          dateChangeHandler(e.target.value);
-        }}
-        className={selectedDateValid === true ? "valid" : "invalid"}
-      />
-      <label htmlFor="res-time">Choose time</label>
-      <select
-        data-testid="select-time"
-        disabled={props.selectedDate !== selectedDate || !selectedDateValid}
-        id="res-time"
-        onChange={(e) => {
-          selectedTimeHandler(e.target.value);
-          props.dispatch(e.target.value, "updateTime");
-        }}
-      >
-        {props.state?.map((time) => {
-          return (
-            <option key={time} value={time} data-testid="select-option">
-              {time}
-            </option>
-          );
-        })}
-      </select>
-      <label htmlFor="guests">Number of guests</label>
-      <input
-        type="number"
-        placeholder="1"
-        min="1"
-        max="10"
-        id="guests"
-        data-testid="select-guests"
-        value={selectedNumberOfGuests}
-        onChange={(e) => setSelectedNumberOfGuestsHandler(e.target.value)}
-      />
-      <label htmlFor="occasion">Occasion</label>
-      <select
-        id="occasion"
-        onChange={(e) => setSelectedOccasionHandler(e.target.value)}
-      >
-        {availableOccasions.map((availableOccasion) => {
-          return (
-            <option key={availableOccasion} value={availableOccasion}>
-              {availableOccasion}
-            </option>
-          );
-        })}
-      </select>
-      <input
+        data-testid="submit"
+        className="btn btn-primary"
         type="submit"
-        value="Make Your reservation"
+        value="Reserve"
         disabled={
           !submitAvailable ||
           props.selectedDate !== selectedDate ||

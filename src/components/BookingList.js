@@ -2,7 +2,7 @@ import React from "react";
 
 export default function BookingList(props) {
   return (
-    <table data-testid="bookings">
+    <table data-testid="bookings" className="booking-table">
       <thead>
         <tr>
           <th>Date</th>

@@ -35,6 +35,7 @@ body {
 
 .invalid {
   border-color: red;
+  border-width: 3px;
 }
 
 .section {
@@ -368,13 +369,82 @@ a:link {
   text-decoration: none;
 }
 
-.App {
+.booking-page h2 {
+  text-align: center;
+  margin: 5rem;
+}
+
+.booking-form {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.form-booking {
+  gap: 20px;
+  display: grid;
+  grid-auto-flow: row;
+  margin-bottom: 5rem;
+}
+
+.form-booking fieldset {
+  display: grid;
+  background-color: var(--light-grey);
+  text-align: left;
+  margin: 0;
+  width: 100%;
+  font-family: var(--karla);
+  font-size: var(--bigger-font);
+}
+
+.form-booking fieldset p > div {
+  font-size: var(--smaller);
+  color: red;
+  margin-left: 1rem;
+}
+
+.form-booking fieldset p {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.form-booking fieldset input,
+.form-booking fieldset select {
+  text-align: right;
+  border-radius: 5px;
+  font-family: var(--karla);
+  font-size: var(--bigger-font);
+}
+
+.form-booking input[type="submit"] {
+  color: black;
+  justify-self: center;
+}
+
+.booking-table {
+  columns: auto;
+  width: 100%;
+  background-color: var(--broken-white);
+  font-family: var(--karla);
+  margin-bottom: 5rem;
+}
+
+.booking-table thead {
+  font-size: var(--bigger-font);
+  background-color: var(--dark-green);
+  color: var(--yellow);
+}
+
+.booking-form th {
+  border-radius: 5px;
+}
+
+.booking-table tbody {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.booking-table th,
+.booking-table td {
+  width: 25%;
 }
 
 @media (prefers-reduced-motion: no-preference) {

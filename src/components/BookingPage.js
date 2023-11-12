@@ -10,15 +10,17 @@ export default function BookingPage(props) {
   return (
     <>
       <Nav />
-      <main className="container">
-        <h2>Booking Page</h2>
-        <BookingForm
-          state={props.state}
-          dispatch={props.dispatch}
-          submitForm={props.submitForm}
-          selectedDate={props.selectedDate}
-        />
-        <BookingList booked={booked} />
+      <main className="container green-background booking-page">
+        <h2 className="title-section-big text-yellow">Booking Page</h2>
+        <div className="booking-form">
+          <BookingForm
+            state={props.state}
+            dispatch={props.dispatch}
+            submitForm={props.submitForm}
+            selectedDate={props.selectedDate}
+          />
+          <BookingList booked={booked} />
+        </div>
       </main>
     </>
   );
